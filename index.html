@@ -1,0 +1,61 @@
+<html>
+<head>
+	<script>
+		var ready = false;
+		var canvas = null;
+		var ctx = null;
+		var sprites = [];
+
+		window.requestAnimFrame = (function(){
+		  return  window.requestAnimationFrame       ||
+		          window.webkitRequestAnimationFrame ||
+		          window.mozRequestAnimationFrame    ||
+		          function( callback ){
+		            window.setTimeout(callback, 1000 / 60);
+		          };
+		})();
+
+		function initialize() {
+			canvas = document.getElementById('tutorial');
+			ctx = canvas.getContext('2d');
+			ready = true;
+
+			sprites.push({
+				type: 'rectangle',
+				x: 0,
+				y: 0,
+				width: 20,
+				height: 20,
+				color: '#FF0000'
+			});
+		}
+
+		function onAnimationFrame() {
+			if (!ready) {
+				return;
+			}
+
+			ctx.fillStyle = "#DDDDDD";
+			ctx.fillRect(0,0,400,400);
+
+			for (var i = 0; i < sprites.length; i++) {
+				var sprite = sprites[i];
+				if (sprite.type === 'rectangle') {
+					ctx.fillStyle = sprite.color;
+					ctx.fillRect(sprite.x, 
+						sprite.y,
+						sprite.width,
+						sprite.height);
+				}
+			}
+			
+		}
+
+		window.onload = initialize;
+		window.requestAnimationFrame(onAnimationFrame);
+	</script>
+</head>
+<body>
+	<canvas id="tutorial" width="400" height="400"></canvas>
+</body>
+</html>
