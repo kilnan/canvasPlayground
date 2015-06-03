@@ -5,6 +5,7 @@
 		var canvas = null;
 		var ctx = null;
 		var sprites = [];
+		var gravityInPixelsPerSecond = 100;
 
 		window.requestAnimFrame = (function(){
 		  return  window.requestAnimationFrame       ||
@@ -26,8 +27,10 @@
 				y: 0,
 				width: 20,
 				height: 20,
-				color: '#FF0000'
+				color: '#FF0000',
+				gravity: true
 			});
+			animateWorld();
 		}
 
 		function onAnimationFrame() {
@@ -51,8 +54,25 @@
 			
 		}
 
+		function animateWorld() {
+			var interval = 10;
+			window.setInterval(function () {
+				for (var i = 0; i < sprites.length; i++) {
+					var sprite = sprites[i];
+					if (sprite.gravity) {
+						var pixelsToMove = gravityInPixelsPerSecond * interval / 1000;
+						sprite.y = sprite.y + pixelsToMove;
+						if (sprite.y + sprite.height > 400)
+						{
+							sprite.y = 400 - sprite.height;
+						}
+					}
+				}
+			}, interval);
+		}
+
 		window.onload = initialize;
-		window.requestAnimationFrame(onAnimationFrame);
+		window.setInterval(onAnimationFrame, 10);
 	</script>
 </head>
 <body>
