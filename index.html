@@ -34,6 +34,16 @@
 				xMovement: 0,
 				yMovement: 0
 			});
+			sprites.push({
+				type: 'circle',
+				x: 100,
+				y: 100,
+				radius: 20,
+				color: '#00FF00',
+				gravity: true,
+				xMovement: 0,
+				yMovement: 0
+			});
 			animateWorld();
 		}
 
@@ -54,6 +64,15 @@
 						sprite.width,
 						sprite.height);
 				}
+				else if (sprite.type === 'circle') {
+					ctx.beginPath();
+				    ctx.arc(sprite.x, sprite.y, sprite.radius, 0, 2 * Math.PI, false);
+				    ctx.fillStyle = sprite.color;
+				    ctx.fill();
+				    ctx.lineWidth = 5;
+				    ctx.strokeStyle = sprite.color;
+				    ctx.stroke();
+				}
 			}
 			
 		}
@@ -65,22 +84,67 @@
 					var sprite = sprites[i];
 					var pixelsToMoveY = sprite.xMovement;
 					var pixelsToMoveX = sprite.yMovement;
+					var initialX = sprite.x;
+					var initialY = sprite.y;
 
+					//should decrease exponentially and depending
+					//on collision..
 					sprite.xMovement = 0;
 					sprite.yMovement = 0;
 
 					if (sprite.gravity) {
 						pixelsToMoveY = pixelsToMoveY + gravityInPixelsPerSecond * interval / 1000;
 					}
-					sprite.y = sprite.y + pixelsToMoveY;
-					if (sprite.y + sprite.height > worldHeight)
+					if (pixelsToMoveY === 0 && pixelsToMoveX === 0)
 					{
-						sprite.y = worldHeight - sprite.height;
+						continue;
 					}
+
+					sprite.y = sprite.y + pixelsToMoveY;
 					sprite.x = sprite.x + pixelsToMoveX;
-					if (sprite.x + sprite.width > worldWidth)
-					{
-						sprite.x = worldWidth - sprite.width;
+
+					if (sprite.type === 'rectangle') {
+						if (sprite.y + sprite.height > worldHeight)
+						{
+							sprite.y = worldHeight - sprite.height;
+						}
+						
+						if (sprite.x + sprite.width > worldWidth)
+						{
+							sprite.x = worldWidth - sprite.width;
+						}
+					}
+					else if (sprite.type === 'circle') {
+						if (sprite.y + sprite.radius > worldHeight)
+						{
+							sprite.y = worldHeight - sprite.radius;
+						}
+						
+						if (sprite.x + sprite.radius > worldWidth)
+						{
+							sprite.x = worldWidth - sprite.radius;
+						}
+					}
+
+					var collision = false;
+					for (var j = 0; j < sprites.length; j++) {
+						if (i === j) {
+							continue;
+						}
+						var spriteToCheck = sprites[j];
+						if (sprite.type === 'circle' && 
+							spriteToCheck.type === 'circle') {
+							//let's implement the only trivial one
+						}
+						else if (sprite.type === 'circle' && 
+							spriteToCheck.type === 'rectangle') {
+							//let's implement the only trivial one
+						}
+					}
+
+					if (collision) {
+						sprite.x = initialX;
+						sprite.y = initialY;
 					}
 				}
 			}, interval);
