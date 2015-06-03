@@ -6,6 +6,8 @@
 		var ctx = null;
 		var sprites = [];
 		var gravityInPixelsPerSecond = 100;
+		var worldWidth = 400;
+		var worldHeight = 200;
 
 		window.requestAnimFrame = (function(){
 		  return  window.requestAnimationFrame       ||
@@ -28,7 +30,9 @@
 				width: 20,
 				height: 20,
 				color: '#FF0000',
-				gravity: true
+				gravity: true,
+				xMovement: 0,
+				yMovement: 0
 			});
 			animateWorld();
 		}
@@ -39,7 +43,7 @@
 			}
 
 			ctx.fillStyle = "#DDDDDD";
-			ctx.fillRect(0,0,400,400);
+			ctx.fillRect(0, 0, worldWidth, worldHeight);
 
 			for (var i = 0; i < sprites.length; i++) {
 				var sprite = sprites[i];
@@ -59,13 +63,24 @@
 			window.setInterval(function () {
 				for (var i = 0; i < sprites.length; i++) {
 					var sprite = sprites[i];
+					var pixelsToMoveY = sprite.xMovement;
+					var pixelsToMoveX = sprite.yMovement;
+
+					sprite.xMovement = 0;
+					sprite.yMovement = 0;
+
 					if (sprite.gravity) {
-						var pixelsToMove = gravityInPixelsPerSecond * interval / 1000;
-						sprite.y = sprite.y + pixelsToMove;
-						if (sprite.y + sprite.height > 400)
-						{
-							sprite.y = 400 - sprite.height;
-						}
+						pixelsToMoveY = pixelsToMoveY + gravityInPixelsPerSecond * interval / 1000;
+					}
+					sprite.y = sprite.y + pixelsToMoveY;
+					if (sprite.y + sprite.height > worldHeight)
+					{
+						sprite.y = worldHeight - sprite.height;
+					}
+					sprite.x = sprite.x + pixelsToMoveX;
+					if (sprite.x + sprite.width > worldWidth)
+					{
+						sprite.x = worldWidth - sprite.width;
 					}
 				}
 			}, interval);
@@ -76,6 +91,6 @@
 	</script>
 </head>
 <body>
-	<canvas id="tutorial" width="400" height="400"></canvas>
+	<canvas id="tutorial" width="400" height="200"></canvas>
 </body>
 </html>
