@@ -8,6 +8,7 @@
 		var gravityInPixelsPerSecond = 100;
 		var worldWidth = 400;
 		var worldHeight = 200;
+		var player = null;
 
 		window.requestAnimFrame = (function(){
 		  return  window.requestAnimationFrame       ||
@@ -23,6 +24,17 @@
 			ctx = canvas.getContext('2d');
 			ready = true;
 
+			player = {
+				type: 'circle',
+				x: 100,
+				y: 0,
+				radius: 5,
+				color: 'yellow',
+				gravity: true,
+				xMovement: 0,
+				yMovement: 0
+			};
+			sprites.push(player);
 			sprites.push({
 				type: 'rectangle',
 				x: 0,
@@ -40,16 +52,6 @@
 				y: 100,
 				radius: 20,
 				color: '#00FF00',
-				gravity: true,
-				xMovement: 0,
-				yMovement: 0
-			});
-			sprites.push({
-				type: 'circle',
-				x: 100,
-				y: 0,
-				radius: 5,
-				color: 'yellow',
 				gravity: true,
 				xMovement: 0,
 				yMovement: 0
@@ -189,8 +191,8 @@
 			window.setInterval(function () {
 				for (var i = 0; i < sprites.length; i++) {
 					var sprite = sprites[i];
-					var pixelsToMoveY = sprite.xMovement;
-					var pixelsToMoveX = sprite.yMovement;
+					var pixelsToMoveY = sprite.yMovement;
+					var pixelsToMoveX = sprite.xMovement;
 					var initialX = sprite.x;
 					var initialY = sprite.y;
 
@@ -279,6 +281,18 @@
 
 		window.onload = initialize;
 		window.setInterval(onAnimationFrame, 10);
+
+		document.onkeypress = function (e) {
+		    e = e || window.event;
+		    console.log('pressed' + e.keyIdentifier);
+
+		    if (e.keyIdentifier === 'U+0041') {
+		    	player.xMovement = -3;
+		    }
+		    else if (e.keyIdentifier === 'U+0044') {
+		    	player.xMovement = 3;
+		    }
+		};
 	</script>
 </head>
 <body>
