@@ -44,6 +44,16 @@
 				xMovement: 0,
 				yMovement: 0
 			});
+			sprites.push({
+				type: 'circle',
+				x: 100,
+				y: 0,
+				radius: 5,
+				color: 'yellow',
+				gravity: true,
+				xMovement: 0,
+				yMovement: 0
+			});
 			animateWorld();
 		}
 
@@ -75,6 +85,21 @@
 				}
 			}
 			
+		}
+
+		function collisionCircles(circleA, circleB) {
+			var distanceX = circleA.x - circleB.x;
+			var distanceY = circleA.y - circleB.y;
+			var radiusSum = circleA.radius + circleB.radius;
+
+			distanceX = distanceX * distanceX;
+			distanceY = distanceY * distanceY;
+			radiusSum = radiusSum * radiusSum;
+
+			return distanceX + distanceY < radiusSum;
+		}
+
+		function collisionCircleToRectangle(circle, rectangle) {
 		}
 
 		function animateWorld() {
@@ -134,11 +159,17 @@
 						var spriteToCheck = sprites[j];
 						if (sprite.type === 'circle' && 
 							spriteToCheck.type === 'circle') {
-							//let's implement the only trivial one
+							if (collisionCircles(sprite, spriteToCheck)) {
+								collision = true;
+								break;
+							}
 						}
 						else if (sprite.type === 'circle' && 
 							spriteToCheck.type === 'rectangle') {
-							//let's implement the only trivial one
+							if (collisionCircleToRectangle(sprite, spriteToCheck)) {
+								collision = true;
+								break;
+							}
 						}
 					}
 
