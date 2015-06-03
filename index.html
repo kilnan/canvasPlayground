@@ -100,6 +100,43 @@
 		}
 
 		function collisionCircleToRectangle(circle, rectangle) {
+			if (circle.x < rectangle.x + rectangle.width &&
+				circle.x > rectangle.x &&
+				circle.y < rectangle.y + rectangle.height &&
+				circle.y > rectangle.y) {
+				return true;
+			}
+			var vertexes = [{
+				x: rectangle.x,
+				y: rectangle.y
+			}, {
+				x: rectangle.x + rectangle.width,
+				y: rectangle.y
+			}, {
+				x: rectangle.x,
+				y: rectangle.y + rectangle.height
+			}, {
+				x: rectangle.x + rectangle.width,
+				y: rectangle.y + rectangle.height
+			}];
+
+			for (var i = 0; i < vertexes; i++) {
+				var vertex = vertexes[i];
+				var distanceX = vertex.x - circle.x;
+				var distanceY = vertex.y - circle.y;
+				var radiusSum = circle.radius;
+
+				distanceX = distanceX * distanceX;
+				distanceY = distanceY * distanceY;
+				radiusSum = radiusSum * radiusSum;
+
+				if (distanceX + distanceY < radiusSum)
+				{
+					return true;
+				}
+
+			}
+
 		}
 
 		function animateWorld() {
