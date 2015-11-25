@@ -13,6 +13,11 @@
 		var worldWidth = 400;
 		var worldHeight = 200;
 		var player = null;
+		var parameters = {
+			playerFriction: 0.9,
+			playerAcceleration: 0.3,
+			playerTopSpeed: 3.0
+		};
 
 		window.requestAnimFrame = (function(){
 		  return  window.requestAnimationFrame       ||
@@ -24,31 +29,34 @@
 		})();
 
 		function initialize() {
+			updateParameters();
+			bindInputs();
+
 			canvas = document.getElementById('tutorial');
 			ctx = canvas.getContext('2d');
 			ready = true;
 
 			player = {
 				type: 'circle',
-				x: 100,
+				x: 200,
 				y: 0,
 				radius: 5,
 				color: 'yellow',
 				gravity: true,
-				xMovement: 0,
-				yMovement: 0
+				xMovement: 0.0,
+				yMovement: 0.0
 			};
 			sprites.push(player);
 			sprites.push({
 				type: 'rectangle',
-				x: 0,
-				y: 0,
+				x: 100,
+				y: 100,
 				width: 20,
 				height: 20,
 				color: '#FF0000',
 				gravity: true,
-				xMovement: 0,
-				yMovement: 0
+				xMovement: 0.0,
+				yMovement: 0.0
 			});
 			sprites.push({
 				type: 'circle',
@@ -57,8 +65,8 @@
 				radius: 20,
 				color: '#00FF00',
 				gravity: true,
-				xMovement: 0,
-				yMovement: 0
+				xMovement: 0.0,
+				yMovement: 0.0
 			});
 			sprites.push({
 				type: 'rectangle',
@@ -68,8 +76,8 @@
 				height: 20,
 				color: 'yellow',
 				gravity: true,
-				xMovement: 0,
-				yMovement: 0
+				xMovement: 0.0,
+				yMovement: 0.0
 			});
 
 			sprites.push({
@@ -80,8 +88,8 @@
 				height: 20,
 				color: 'yellow',
 				gravity: true,
-				xMovement: 0,
-				yMovement: 0
+				xMovement: 0.0,
+				yMovement: 0.0
 			});
 			animateWorld();
 		}
@@ -202,8 +210,9 @@
 
 					//should decrease exponentially and depending
 					//on collision..
-					sprite.xMovement = 0;
-					sprite.yMovement = 0;
+					sprite.xMovement = sprite.xMovement > 0.01 ? sprite.xMovement * parameters.playerFriction : 
+									   sprite.xMovement < -0.01 ? sprite.xMovement * parameters.playerFriction : 0.0;
+					sprite.yMovement = 0.0;
 
 					if (sprite.gravity) {
 						pixelsToMoveY = pixelsToMoveY + gravityInPixelsPerSecond * interval / 1000;
@@ -288,18 +297,61 @@
 
 		document.onkeypress = function (e) {
 		    e = e || window.event;
-		    console.log('pressed' + e.keyIdentifier);
+		    //console.log('pressed' + e.keyIdentifier);
 
 		    if (e.keyIdentifier === 'U+0041') {
-		    	player.xMovement = -3;
+		    	player.xMovement -= parameters.playerAcceleration;
+		    	if (player.xMovement < - parameters.playerTopSpeed) {
+		    		player.xMovement = - parameters.playerTopSpeed;
+		    	}
 		    }
 		    else if (e.keyIdentifier === 'U+0044') {
-		    	player.xMovement = 3;
+		    	player.xMovement += parameters.playerAcceleration;
+		    	if (player.xMovement > parameters.playerTopSpeed) {
+		    		player.xMovement = parameters.playerTopSpeed;
+		    	}
 		    }
+		    //console.log('====' + player.xMovement);
 		};
+
+		
+
+		function updateParameters() {
+			var parameterInputs = document.querySelectorAll('.dynamic-parameter input');
+
+			for (var i = 0; i < parameterInputs.length; i++)
+			{
+				var parameterInput = parameterInputs[i];
+				var value = parameterInput.value;
+				var contentType = parameterInput.attributes['content-type'].value;
+				var name = parameterInput.attributes['name'].value;
+
+				if (contentType === 'float') {
+					parameters[name] = parseFloat(value);
+				}
+
+				console.log(parameterInput);
+			}
+		}
+
+		function bindInputs() {
+			var parameterInputs = document.querySelectorAll('.dynamic-parameter input');
+			
+			for (var i = 0; i < parameterInputs.length; i++)
+			{
+				parameterInputs[i].addEventListener('change', function () {
+					console.log('ciao');
+				    updateParameters();
+				});
+			}
+		}
+
 	</script>
 </head>
 <body>
 	<canvas id="tutorial" width="400" height="200"></canvas>
+	<div class="dynamic-parameter">PlayerFriction <input name="playerFriction" type="text" value="0.9" content-type="float"/></div>
+	<div class="dynamic-parameter">PlayerAcceleration <input name="playerAcceleration" type="text" value="0.3" content-type="float"/></div>
+	<div class="dynamic-parameter">PlayerTopSpeed <input name="playerTopSpeed" type="text" value="3.0" content-type="float"/></div>
 </body>
 </html>
