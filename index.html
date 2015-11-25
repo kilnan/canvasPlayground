@@ -1,13 +1,13 @@
 <html>
 <head>
 	<script>
-		//implement inertia and gradual slowening of current movementxy
-		//implement "isGrounded flag" for player
-		//implementing jump for player
-		//try to use current setup to make jumps
-		//permettere a elementi di muoversi lungo una superficie..
-			//o determino quando un elemento è grounded
-			//o determino la collisione soltanto lungo un asse
+		//find a solution to make the player move on platforms and jump only when over a platform
+		  //it could be a isGrounded flag
+		  //could be something else
+
+		//pixel-perfect collision detection, now we just stop the movement if the next position would be over another element,
+		//we have to get perfectly close to that element
+		
 		var ready = false;
 		var canvas = null;
 		var ctx = null;
