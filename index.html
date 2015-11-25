@@ -229,12 +229,16 @@
 				    		player.xMovement = parameters.playerTopSpeed;
 				    	}
 				    }
+				    if (key[32]) {
+				    	player.yMovement = -6.0;
+				    }
 
 					//should decrease exponentially and depending
 					//on collision..
 					sprite.xMovement = sprite.xMovement > 0.01 ? sprite.xMovement * parameters.playerFriction : 
 									   sprite.xMovement < -0.01 ? sprite.xMovement * parameters.playerFriction : 0.0;
-					sprite.yMovement = 0.0;
+
+					sprite.yMovement = sprite.yMovement * 0.9;
 
 					if (sprite.gravity) {
 						pixelsToMoveY = pixelsToMoveY + gravityInPixelsPerSecond * interval / 1000;
