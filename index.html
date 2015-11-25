@@ -22,6 +22,12 @@
 			playerTopSpeed: 3.0
 		};
 
+		var key = []; // Or you could call it "key"
+		onkeydown = onkeyup = function(e) {
+		    key[e.keyCode] = e.type == 'keydown';
+		    console.log(e.keyCode);
+		}
+
 		window.requestAnimFrame = (function(){
 		  return  window.requestAnimationFrame       ||
 		          window.webkitRequestAnimationFrame ||
@@ -211,6 +217,19 @@
 					var initialX = sprite.x;
 					var initialY = sprite.y;
 
+					if (key[65]) {
+				    	player.xMovement -= parameters.playerAcceleration;
+				    	if (player.xMovement < - parameters.playerTopSpeed) {
+				    		player.xMovement = - parameters.playerTopSpeed;
+				    	}
+				    }
+				    else if (key[68]) {
+				    	player.xMovement += parameters.playerAcceleration;
+				    	if (player.xMovement > parameters.playerTopSpeed) {
+				    		player.xMovement = parameters.playerTopSpeed;
+				    	}
+				    }
+
 					//should decrease exponentially and depending
 					//on collision..
 					sprite.xMovement = sprite.xMovement > 0.01 ? sprite.xMovement * parameters.playerFriction : 
@@ -297,27 +316,6 @@
 
 		window.onload = initialize;
 		window.setInterval(onAnimationFrame, 10);
-
-		document.onkeypress = function (e) {
-		    e = e || window.event;
-		    //console.log('pressed' + e.keyIdentifier);
-
-		    if (e.keyIdentifier === 'U+0041') {
-		    	player.xMovement -= parameters.playerAcceleration;
-		    	if (player.xMovement < - parameters.playerTopSpeed) {
-		    		player.xMovement = - parameters.playerTopSpeed;
-		    	}
-		    }
-		    else if (e.keyIdentifier === 'U+0044') {
-		    	player.xMovement += parameters.playerAcceleration;
-		    	if (player.xMovement > parameters.playerTopSpeed) {
-		    		player.xMovement = parameters.playerTopSpeed;
-		    	}
-		    }
-		    //console.log('====' + player.xMovement);
-		};
-
-		
 
 		function updateParameters() {
 			var parameterInputs = document.querySelectorAll('.dynamic-parameter input');
