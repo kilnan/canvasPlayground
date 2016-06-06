@@ -21,7 +21,7 @@
 			playerAcceleration: 0.05,
 			playerTopSpeed: 2.0
 		};
-
+		var inibitJump = false;
 		var key = []; // Or you could call it "key"
 		onkeydown = onkeyup = function(e) {
 		    key[e.keyCode] = e.type == 'keydown';
@@ -60,7 +60,7 @@
 				type: 'rectangle',
 				x: 100,
 				y: 100,
-				width: 20,
+				width: 100,
 				height: 20,
 				color: '#FF0000',
 				gravity: true,
@@ -229,8 +229,10 @@
 				    		player.xMovement = parameters.playerTopSpeed;
 				    	}
 				    }
-				    if (key[32]) {
-				    	player.yMovement = -6.0;
+				    if (key[32] && !inibitJump) {
+				    	player.yMovement = -10.0;
+				    	inibitJump = true;
+				    	setTimeout(function () { inibitJump = false;}, 500);
 				    }
 
 					//should decrease exponentially and depending
