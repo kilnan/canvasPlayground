@@ -39,6 +39,7 @@
 		})();
 
 		function initialize() {
+			createInputs()
 			updateParameters();
 			bindInputs();
 
@@ -360,6 +361,30 @@
 		window.onload = initialize;
 		window.setInterval(onAnimationFrame, 10);
 
+		function getKeys(obj) {
+		    var r = []
+		    
+		    return r
+		}
+
+		function createInputs() {
+			var allInputs = '';
+
+			for (var key in parameters) {
+		        if (!parameters.hasOwnProperty(key)) {
+		        	continue;
+		        }
+                var attributeName = key;
+				var defaultValue = parameters[key];
+                var input = '<div class="dynamic-parameter">' + attributeName + ' <input name="' + attributeName + '" type="text" value="' + defaultValue + '" content-type="float"/></div>';
+
+                allInputs += input;
+		    }
+
+		    var editableParameters = document.getElementById('editableParameters');
+		    editableParameters.innerHTML = allInputs;
+		}
+
 		function updateParameters() {
 			var parameterInputs = document.querySelectorAll('.dynamic-parameter input');
 
@@ -394,8 +419,7 @@
 </head>
 <body>
 	<canvas id="tutorial" width="400" height="200"></canvas>
-	<div class="dynamic-parameter">PlayerFriction <input name="playerFriction" type="text" value="0.9" content-type="float"/></div>
-	<div class="dynamic-parameter">PlayerAcceleration <input name="playerAcceleration" type="text" value="0.05" content-type="float"/></div>
-	<div class="dynamic-parameter">PlayerTopSpeed <input name="playerTopSpeed" type="text" value="2.0" content-type="float"/></div>
+	<div id="editableParameters">
+	</div>
 </body>
 </html>
