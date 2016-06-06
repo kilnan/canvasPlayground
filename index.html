@@ -248,9 +248,89 @@
 						continue;
 					}
 
-					sprite.y = sprite.y + pixelsToMoveY;
 					sprite.x = sprite.x + pixelsToMoveX;
+					var collisionX = false;
+					for (var j = 0; j < sprites.length; j++) {
+						if (i === j) {
+							continue;
+						}
+						var spriteToCheck = sprites[j];
+						if (sprite.type === 'circle' && 
+							spriteToCheck.type === 'circle') {
+							if (collisionCircles(sprite, spriteToCheck)) {
+								collisionX = true;
+								break;
+							}
+						}
+						else if (sprite.type === 'circle' && 
+							spriteToCheck.type === 'rectangle') {
+							if (collisionCircleToRectangle(sprite, spriteToCheck)) {
+								collisionX = true;
+								break;
+							}
+						}
+						else if (sprite.type === 'rectangle' && 
+							spriteToCheck.type === 'circle') {
+							if (collisionCircleToRectangle(spriteToCheck, sprite)) {
+								collisionX = true;
+								break;
+							}
+						}
+						else if (sprite.type === 'rectangle' && 
+							spriteToCheck.type === 'rectangle') {
+							if (collisionRectangles(sprite, spriteToCheck)) {
+								collisionX = true;
+								break;
+							}
+						}
+					}
 
+					if (collisionX) {
+						sprite.x = initialX;
+					}
+
+					sprite.y = sprite.y + pixelsToMoveY;
+					var collisionY = false;
+					for (var j = 0; j < sprites.length; j++) {
+						if (i === j) {
+							continue;
+						}
+						var spriteToCheck = sprites[j];
+						if (sprite.type === 'circle' && 
+							spriteToCheck.type === 'circle') {
+							if (collisionCircles(sprite, spriteToCheck)) {
+								collisionY = true;
+								break;
+							}
+						}
+						else if (sprite.type === 'circle' && 
+							spriteToCheck.type === 'rectangle') {
+							if (collisionCircleToRectangle(sprite, spriteToCheck)) {
+								collisionY = true;
+								break;
+							}
+						}
+						else if (sprite.type === 'rectangle' && 
+							spriteToCheck.type === 'circle') {
+							if (collisionCircleToRectangle(spriteToCheck, sprite)) {
+								collision = true;
+								collisionY;
+							}
+						}
+						else if (sprite.type === 'rectangle' && 
+							spriteToCheck.type === 'rectangle') {
+							if (collisionRectangles(sprite, spriteToCheck)) {
+								collisionY = true;
+								break;
+							}
+						}
+					}
+
+					if (collisionY) {
+						sprite.y = initialY;
+					}
+
+					//check boundaries
 					if (sprite.type === 'rectangle') {
 						if (sprite.y + sprite.height > worldHeight)
 						{
@@ -272,47 +352,6 @@
 						{
 							sprite.x = worldWidth - sprite.radius;
 						}
-					}
-
-					var collision = false;
-					for (var j = 0; j < sprites.length; j++) {
-						if (i === j) {
-							continue;
-						}
-						var spriteToCheck = sprites[j];
-						if (sprite.type === 'circle' && 
-							spriteToCheck.type === 'circle') {
-							if (collisionCircles(sprite, spriteToCheck)) {
-								collision = true;
-								break;
-							}
-						}
-						else if (sprite.type === 'circle' && 
-							spriteToCheck.type === 'rectangle') {
-							if (collisionCircleToRectangle(sprite, spriteToCheck)) {
-								collision = true;
-								break;
-							}
-						}
-						else if (sprite.type === 'rectangle' && 
-							spriteToCheck.type === 'circle') {
-							if (collisionCircleToRectangle(spriteToCheck, sprite)) {
-								collision = true;
-								break;
-							}
-						}
-						else if (sprite.type === 'rectangle' && 
-							spriteToCheck.type === 'rectangle') {
-							if (collisionRectangles(sprite, spriteToCheck)) {
-								collision = true;
-								break;
-							}
-						}
-					}
-
-					if (collision) {
-						sprite.x = initialX;
-						sprite.y = initialY;
 					}
 				}
 			}, interval);
