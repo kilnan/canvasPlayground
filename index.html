@@ -19,7 +19,8 @@
 		var parameters = {
 			playerFriction: 0.9,
 			playerAcceleration: 0.05,
-			playerTopSpeed: 2.0
+			playerTopSpeed: 2.0,
+			playerJump: 10.0
 		};
 		var inibitJump = false;
 		var key = []; // Or you could call it "key"
@@ -53,14 +54,15 @@
 				color: 'yellow',
 				gravity: true,
 				xMovement: 0.0,
-				yMovement: 0.0
+				yMovement: 0.0,
+				isPlayer: true
 			};
 			sprites.push(player);
 			sprites.push({
 				type: 'rectangle',
-				x: 100,
-				y: 100,
-				width: 100,
+				x: 0,
+				y: 400,
+				width: 500,
 				height: 20,
 				color: '#FF0000',
 				gravity: true,
@@ -229,10 +231,8 @@
 				    		player.xMovement = parameters.playerTopSpeed;
 				    	}
 				    }
-				    if (key[32] && !inibitJump) {
-				    	player.yMovement = -10.0;
-				    	inibitJump = true;
-				    	setTimeout(function () { inibitJump = false;}, 500);
+				    if (key[32] && player.isGrounded) {
+				    	player.yMovement = -parameters.playerJump;
 				    }
 
 					//should decrease exponentially and depending
@@ -244,10 +244,6 @@
 
 					if (sprite.gravity) {
 						pixelsToMoveY = pixelsToMoveY + gravityInPixelsPerSecond * interval / 1000;
-					}
-					if (pixelsToMoveY === 0 && pixelsToMoveX === 0)
-					{
-						continue;
 					}
 
 					sprite.x = sprite.x + pixelsToMoveX;
@@ -328,8 +324,10 @@
 						}
 					}
 
+					sprite.isGrounded = false;
 					if (collisionY) {
 						sprite.y = initialY;
+						sprite.isGrounded = true;
 					}
 
 					//check boundaries
