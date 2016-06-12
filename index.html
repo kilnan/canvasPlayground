@@ -16,7 +16,10 @@
 			playerFriction: 0.9,
 			playerAcceleration: 0.05,
 			playerTopSpeed: 2.0,
-			playerJump: 10.0
+			playerJump: 10.0,
+			scrollX: 0.0,
+			scrollY: 0.0,
+			zoom: 1.0
 		};
 		var inibitJump = false;
 		var key = []; // Or you could call it "key"
@@ -107,21 +110,24 @@
 				return;
 			}
 
+			var scrollX = parameters.scrollX;
+			var scrollY = parameters.scrollY;
+			var zoom = parameters.zoom;
+
 			ctx.fillStyle = "#DDDDDD";
 			ctx.fillRect(0, 0, worldWidth, worldHeight);
 
 			for (var i = 0; i < sprites.length; i++) {
 				var sprite = sprites[i];
+				var transformedX = (sprite.x - scrollX) * zoom;
+				var transformedY = (sprite.y - scrollY) * zoom;
 				if (sprite.type === 'rectangle') {
 					ctx.fillStyle = sprite.color;
-					ctx.fillRect(sprite.x, 
-						sprite.y,
-						sprite.width,
-						sprite.height);
+					ctx.fillRect(transformedX, transformedY, sprite.width * zoom, sprite.height * zoom);
 				}
 				else if (sprite.type === 'circle') {
 					ctx.beginPath();
-				    ctx.arc(sprite.x, sprite.y, sprite.radius, 0, 2 * Math.PI, false);
+				    ctx.arc(transformedX, transformedY, sprite.radius * zoom, 0, 2 * Math.PI, false);
 				    ctx.fillStyle = sprite.color;
 				    ctx.fill();
 				    ctx.lineWidth = 5;
