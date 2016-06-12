@@ -9,8 +9,8 @@
 		var ctx = null;
 		var sprites = [];
 		var gravityInPixelsPerSecond = 100;
-		var worldWidth = 400;
-		var worldHeight = 200;
+		var viewportWidth = 400;
+		var viewportHeight = 200;
 		var player = null;
 		var parameters = {
 			playerFriction: 0.9,
@@ -115,7 +115,7 @@
 			var zoom = parameters.zoom;
 
 			ctx.fillStyle = "#DDDDDD";
-			ctx.fillRect(0, 0, worldWidth, worldHeight);
+			ctx.fillRect(0, 0, viewportWidth, viewportHeight);
 
 			for (var i = 0; i < sprites.length; i++) {
 				var sprite = sprites[i];
