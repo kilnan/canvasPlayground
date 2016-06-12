@@ -326,30 +326,6 @@
 						sprite.y = initialY;
 						sprite.isGrounded = true;
 					}
-
-					//check boundaries
-					if (sprite.type === 'rectangle') {
-						if (sprite.y + sprite.height > worldHeight)
-						{
-							sprite.y = worldHeight - sprite.height;
-						}
-						
-						if (sprite.x + sprite.width > worldWidth)
-						{
-							sprite.x = worldWidth - sprite.width;
-						}
-					}
-					else if (sprite.type === 'circle') {
-						if (sprite.y + sprite.radius > worldHeight)
-						{
-							sprite.y = worldHeight - sprite.radius;
-						}
-						
-						if (sprite.x + sprite.radius > worldWidth)
-						{
-							sprite.x = worldWidth - sprite.radius;
-						}
-					}
 				}
 			}, interval);
 		}
