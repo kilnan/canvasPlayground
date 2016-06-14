@@ -8,6 +8,7 @@
 		var canvas = null;
 		var ctx = null;
 		var sprites = [];
+		var images = [];
 		var gravityInPixelsPerSecond = 100;
 		var viewportWidth = 400;
 		var viewportHeight = 200;
@@ -46,6 +47,13 @@
 			ctx = canvas.getContext('2d');
 			ready = true;
 
+			loadImages(function () {
+				addSprites();
+				animateWorld();
+			});
+		}
+        
+        function addSprites(){
 			player = {
 				type: 'circle',
 				x: 200,
@@ -91,6 +99,8 @@
 				yMovement: 0.0
 			});
 
+
+            var image = images[0];
 			sprites.push({
 				type: 'rectangle',
 				x: 300,
@@ -100,9 +110,19 @@
 				color: 'yellow',
 				gravity: true,
 				xMovement: 0.0,
-				yMovement: 0.0
+				yMovement: 0.0,
+				image: image
 			});
-			animateWorld();
+		}
+
+		function loadImages (callback) {
+        	var imageObj = new Image();
+        		imageObj.onload = function() {
+        			images.push({ name: 'theonlyone', image: this});
+          		    callback();
+        	};
+
+        	imageObj.src = 'mario.png';
 		}
 
 		function onAnimationFrame() {
@@ -121,7 +141,12 @@
 				var sprite = sprites[i];
 				var transformedX = (sprite.x - scrollX) * zoom;
 				var transformedY = (sprite.y - scrollY) * zoom;
-				if (sprite.type === 'rectangle') {
+				if (sprite.image) {
+					//this might need to depend on the specific type
+					//definitely need to make it possible to offset the image
+					//need support fort animations
+					ctx.drawImage(sprite.image.image, 215, 89, 15, 15, transformedX, transformedY, sprite.width * zoom, sprite.height * zoom);
+				} else if (sprite.type === 'rectangle') {
 					ctx.fillStyle = sprite.color;
 					ctx.fillRect(transformedX, transformedY, sprite.width * zoom, sprite.height * zoom);
 				}
