@@ -19,9 +19,9 @@
 			playerJump: 10.0,
 			scrollX: 0.0,
 			scrollY: 0.0,
-			zoom: 1.0
+			zoom: 1.0,
+			disableCameraFollow: 0
 		};
-		var inibitJump = false;
 		var key = []; // Or you could call it "key"
 		onkeydown = onkeyup = function(e) {
 		    key[e.keyCode] = e.type == 'keydown';
@@ -136,7 +136,59 @@
 				}
 			}
 			
+			cameraFollow(player);
 		}
+
+		var lastTransformedX = null;
+		var lastTransformedY = null;
+        function cameraFollow(player) {
+        	if (parameters.disableCameraFollow) {
+        		return;
+        	}
+
+        	var zoom = parameters.zoom;
+        	var transformedX = (player.x - scrollX) * zoom;
+			var transformedY = (player.y - scrollY) * zoom;
+
+			if (!lastTransformedX || !transformedY) {
+				lastTransformedX = transformedX;
+				lastTransformedY = transformedY;
+
+				return;
+			}
+			
+            var currentViewport = {
+            	left: parameters.scrollX,
+            	right: parameters.scrollX + viewportWidth,
+            	bottom: parameters.scrollY,
+            	top: parameters.scrollY + viewportHeight
+            };
+
+            var boundaryLeft = currentViewport.left + viewportWidth / 5;
+            var boundaryRight = currentViewport.right - viewportWidth / 5;
+            var boundaryBottom = currentViewport.bottom + viewportHeight / 5;
+            var boundaryTop = currentViewport.top - viewportHeight / 5;
+
+            var movingLeft = transformedX < lastTransformedX;
+            var movingRight = transformedX > lastTransformedX;
+            var movingUp = transformedY > lastTransformedY;
+            var movingDown = transformedY < lastTransformedY;
+
+			if (transformedX < boundaryLeft && movingLeft) {
+ 				parameters.scrollX += (transformedX - lastTransformedX) / zoom;
+			} else if (transformedX > boundaryRight && movingRight) {
+                parameters.scrollX += (transformedX - lastTransformedX) / zoom;
+			}
+
+			if (transformedY < boundaryBottom && movingDown) {
+ 				parameters.scrollY += (transformedY - lastTransformedY) / zoom;
+			} else if (transformedY > boundaryTop && movingUp) {
+                parameters.scrollY += (transformedY - lastTransformedY) / zoom;
+			}
+
+			lastTransformedX = transformedX;
+			lastTransformedY = transformedY;
+        }
 
 		function collisionCircles(circleA, circleB) {
 			var distanceX = circleA.x - circleB.x;
